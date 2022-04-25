@@ -8,6 +8,7 @@ import random
 
 def get_arguments():
     parser = argparse.ArgumentParser()
+    parser.add_argument('-x', '--proxy-file', dest='proxyfile', help='Specify the filename containing the list of proxies')
     parser.add_argument('-qF', '--queries-file', dest='queriesfile', help='Specify the filename containing the list of queries')
     parser.add_argument('-P', '--processes', dest='processes', help='Specify the Number of Processes (Default: 2)')    
     parser.add_argument('-o', '--output', dest='output', help='Output targets to a file')    
@@ -15,18 +16,18 @@ def get_arguments():
     return options
 
 
-def google_search(query, page):
+def google_search(query, proxies, page):
     x= random.randint(1, 499)
-    proxy_list = open('proxies.txt')
-    content = proxy_list.readlines()
-    proxy="http://"+content[x]
+    
     result = []
     base_url = 'https://www.google.com/search'
     params   = { 'q': query, 'start': page * 10 }
-    proxies = {
-    "http": "http://"+content[x],
-    "https": "http://"+content[x],
-    }
+    if proxies:
+        proxy="http://"+proxies[x]
+        proxies = {
+        "http": "http://"+proxies[x],
+        "https": "http://"+proxies[x],
+        }
     headers_list = [
             { 
             'authority': 'httpbin.org', 
@@ -72,7 +73,11 @@ def google_search(query, page):
             } 
     ] 
     headers = random.choice(headers_list) 
-    resp = requests.get(base_url, params=params, headers=headers,proxies=proxies)
+
+    if proxies:
+        resp = requests.get(base_url, params=params, headers=headers,proxies=proxies)
+    else:
+        resp = requests.get(base_url, params=params, headers=headers)
     soup = bsoup(resp.text, 'html.parser')
     links  = soup.findAll('cite')
 
@@ -118,7 +123,11 @@ def main():
     print()
     query_file = options.queriesfile
     pages = 2
+    proxies=[]
 
+    if  options.proxyfile:
+        proxy_list = open(options.proxyfile)
+        proxies = proxy_list.readlines()
     if not options.processes:
         processes = 2
     else:
@@ -129,7 +138,7 @@ def main():
             lines = f.readlines()
         for line in lines:
             query=line.strip()
-            target = partial(google_search, query)
+            target = partial(google_search, query,proxies)
             result = p.map(target, range(int(pages)))
             final_result.append(result)
             search_result(query, pages, processes, result)
