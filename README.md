@@ -1,6 +1,6 @@
 # Dorky
 
-Get vulnerable website using google dorking
+Get vulnerable websites using google dorking
 
 ## Installation
 
