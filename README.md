@@ -18,7 +18,7 @@ pip3 install -r requirements.txt
 
 ### With a proxy list:
 ```
- python3 dorky.py -qF dorks/all_google_dorks.txt -o result.output -x proxies.txt
+ python3 dorky.py -qF dorks.txt   -o result.output --pages 100 --headful  -v
 
 
 ```
