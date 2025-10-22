@@ -13,7 +13,7 @@ pip3 install -r requirements.txt
 ## Usage
 
 
-![Screenshot from 2022-04-25 17-11-51](https://user-images.githubusercontent.com/39093520/165118652-0c8be1e2-5fd4-4e77-8d8a-13dd6bc3e2dd.png)
+<img width="1174" height="408" alt="image" src="https://github.com/user-attachments/assets/5ee11f91-66df-4a2a-a260-c3fe51516db4" />
 
 
 ### With a proxy list:
